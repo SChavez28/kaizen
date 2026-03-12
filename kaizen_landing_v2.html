@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>改善 KAIZEN · Focus Habit Tracker App · Comunidad del 1%</title>
+<meta name="description" content="La app de tracking de hábitos más poderosa. iOS nativa, comunidad en tiempo real, analytics avanzados. Únete al 1% que mejora cada día.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Shippori+Mincho:wght@400;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:    #08080F;
+  --deep:   #0C0C18;
+  --card:   #111120;
+  --edge:   #191930;
+  --line:   #1F1F38;
+  --muted:  #2C2C50;
+  --slate:  #6B7280;
+  --silver: #9CA3AF;
+  --white:  #F2EFE8;
+  --paper:  #FAF7F0;
+  --gold:   #C8A94A;
+  --gold2:  #E8C96E;
+  --gold3:  #FFF0BC;
+  --jade:   #2DCEA0;
+  --jade2:  #1FF0BA;
+  --ember:  #E8603A;
+  --violet: #9B6DFF;
+  --fs-xs:  11px;
+  --fs-sm:  13px;
+  --fs-md:  15px;
+  --fs-lg:  18px;
+  --fs-xl:  24px;
+  --r: 3px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ink);
+  color: var(--white);
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button { cursor: none; border: none; background: none; font-family: inherit; }
+
+.cursor {
+  position: fixed; width: 10px; height: 10px;
+  background: var(--gold); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.08s, width 0.3s var(--ease), height 0.3s var(--ease), background 0.3s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed; width: 38px; height: 38px;
+  border: 1px solid rgba(200,169,74,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.25s var(--ease), width 0.4s var(--ease), height 0.4s var(--ease), opacity 0.3s;
+}
+.noise {
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 998; opacity: 1;
+}
+
+/* NAV */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 48px;
+  border-bottom: 1px solid transparent;
+  transition: all 0.4s var(--ease);
+}
+.nav.scrolled {
+  background: rgba(8,8,15,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom-color: var(--line);
+  padding: 14px 48px;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-kanji { font-family: 'Shippori Mincho', serif; font-size: 22px; color: var(--gold); }
+.nav-wordmark { font-size: var(--fs-xs); letter-spacing: 0.2em; color: var(--silver); text-transform: uppercase; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { font-size: var(--fs-xs); letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  font-size: var(--fs-xs); letter-spacing: 0.15em; font-weight: 500;
+  text-transform: uppercase; background: var(--gold); color: var(--ink);
+  padding: 10px 20px; border-radius: var(--r);
+  transition: background 0.2s, transform 0.2s;
+}
+.nav-cta:hover { background: var(--gold2); transform: translateY(-1px); }
+.nav-mobile-toggle {
+  display: none; flex-direction: column; gap: 5px; padding: 4px;
+  background: none; border: none; cursor: pointer;
+}
+.nav-mobile-toggle span {
+  display: block; width: 22px; height: 1px; background: var(--white);
+  transition: all 0.3s;
+}
+
+/* HERO */
+.hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 48px 80px;
+  overflow: hidden;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(200,169,74,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,169,74,0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+.hero-glow {
+  position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse, rgba(200,169,74,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-bg-kanji {
+  position: absolute; font-family: 'Shippori Mincho', serif;
+  color: var(--gold); user-select: none; pointer-events: none;
+  line-height: 1;
+}
+.hero-stats {
+  position: absolute; right: 48px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 28px;
+}
+.hero-stat { text-align: right; }
+.hero-stat-n {
+  font-family: 'Bebas Neue', sans-serif; font-size: 42px;
+  color: var(--gold); line-height: 1;
+}
+.hero-stat-l { font-size: var(--fs-xs); color: var(--slate); letter-spacing: 0.15em; text-transform: uppercase; }
+.hero-eyebrow { font-size: var(--fs-xs); color: var(--gold); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 24px; }
+.hero-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(80px, 14vw, 160px);
+  line-height: 0.88; letter-spacing: -0.02em;
+  display: flex; flex-direction: column;
+  margin-bottom: 8px;
+}
+.hero-headline .line { display: block; overflow: hidden; }
+.hero-kanji-inline {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(32px, 5vw, 56px);
+  color: var(--gold); display: block;
+  margin-bottom: 48px; line-height: 1;
+}
+.hero-bottom { display: flex; align-items: flex-end; gap: 80px; }
+.hero-desc {
+  max-width: 420px; font-size: var(--fs-md); color: var(--silver); line-height: 1.8;
+}
+.hero-desc strong { color: var(--white); font-weight: 500; }
+.hero-actions { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: var(--fs-xs); color: var(--slate); letter-spacing: 0.2em; text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px; height: 48px; background: linear-gradient(var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 0.6; }
+  50% { transform: scaleY(1.08); opacity: 1; }
+}
+
+/* BUTTONS */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: var(--fs-xs);
+  letter-spacing: 0.2em; font-weight: 500; text-transform: uppercase;
+  background: var(--gold); color: var(--ink);
+  padding: 16px 32px; border-radius: var(--r);
+  position: relative; overflow: hidden;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s;
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: translateX(-100%); transition: transform 0.5s var(--ease);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(200,169,74,0.25); }
+.btn-primary:hover::before { transform: translateX(100%); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: var(--fs-xs);
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--slate);
+  padding: 16px 24px; border: 1px solid var(--line); border-radius: var(--r);
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { color: var(--white); border-color: var(--gold); }
+
+/* MARQUEE */
+.marquee-strip {
+  overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  background: var(--deep); padding: 14px 0;
+}
+.marquee-inner {
+  display: flex; gap: 40px; width: max-content;
+  animation: marquee 28s linear infinite;
+  font-size: var(--fs-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--slate);
+}
+.marquee-inner span { white-space: nowrap; }
+.marquee-inner .dot { color: var(--gold); }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* SECTIONS */
+.section { padding: 120px 48px; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.s-tag {
+  display: inline-block; font-size: var(--fs-xs); letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 20px;
+  padding: 6px 14px; border: 1px solid rgba(200,169,74,0.3);
+  border-radius: var(--r);
+}
+.s-h2 {
+  font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 8vw, 96px);
+  line-height: 0.9; letter-spacing: -0.02em; margin-bottom: 32px;
+}
+.s-h2 em { font-style: normal; color: var(--gold); }
+.s-lead { font-size: var(--fs-lg); color: var(--silver); line-height: 1.7; max-width: 600px; }
+
+/* REVEAL */
+.rv { opacity: 0; transform: translateY(32px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.rv.visible { opacity: 1; transform: translateY(0); }
+.rv-d1 { transition-delay: 0.1s; }
+.rv-d2 { transition-delay: 0.2s; }
+.rv-d3 { transition-delay: 0.3s; }
+.rv-d4 { transition-delay: 0.4s; }
+
+/* PROBLEM */
+.problem { background: var(--deep); }
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.problem-list { list-style: none; display: flex; flex-direction: column; gap: 24px; margin-top: 32px; }
+.problem-item { display: flex; gap: 16px; align-items: flex-start; }
+.p-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.p-text { display: flex; flex-direction: column; gap: 4px; }
+.p-text strong { font-size: var(--fs-md); color: var(--white); font-weight: 500; }
+.p-text span { font-size: var(--fs-sm); color: var(--slate); }
+.problem-right { position: relative; padding-top: 60px; }
+.problem-kanji-float {
+  position: absolute; top: 0; right: 0;
+  font-family: 'Shippori Mincho', serif; font-size: 180px;
+  color: var(--gold); opacity: 0.06; line-height: 1; pointer-events: none;
+}
+.problem-quote-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-left: 3px solid var(--gold); border-radius: var(--r);
+  padding: 32px; position: relative; z-index: 1;
+}
+.pq-text { font-size: var(--fs-md); color: var(--silver); line-height: 1.8; font-style: italic; margin-bottom: 16px; }
+.pq-attr { font-size: var(--fs-xs); color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; }
+
+/* FEATURES */
+.features-header { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end; margin-bottom: 60px; }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.feat-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 32px 28px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.feat-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+.feat-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 48px;
+  color: var(--line); line-height: 1; margin-bottom: 16px;
+}
+.feat-icon { font-size: 28px; margin-bottom: 12px; }
+.feat-title { font-size: var(--fs-md); color: var(--white); font-weight: 500; margin-bottom: 10px; }
+.feat-desc { font-size: var(--fs-sm); color: var(--slate); line-height: 1.7; margin-bottom: 16px; }
+.feat-tag {
+  display: inline-block; font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  border: 1px solid rgba(200,169,74,0.25); padding: 4px 10px; border-radius: var(--r);
+}
+
+/* HOW */
+.how { background: var(--deep); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 60px; position: relative; }
+.steps::before {
+  content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), var(--line), transparent);
+}
+.step { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; position: relative; }
+.step-circle {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--ink);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  position: relative; z-index: 1;
+}
+.step-circle-inner { font-family: 'Bebas Neue'; font-size: 20px; color: var(--gold); }
+.step-icon { font-size: 28px; }
+.step-title { font-size: var(--fs-md); color: var(--white); font-weight: 500; }
+.step-desc { font-size: var(--fs-sm); color: var(--slate); line-height: 1.7; }
+
+/* STATS BAR */
+.stats-bar { background: var(--card); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.stats-bar-inner { display: grid; grid-template-columns: repeat(4, 1fr); }
+.stat-item { padding: 40px 32px; text-align: center; border-right: 1px solid var(--line); }
+.stat-item:last-child { border-right: none; }
+.stat-n { font-family: 'Bebas Neue', sans-serif; font-size: 56px; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+.stat-l { font-size: var(--fs-sm); color: var(--white); font-weight: 500; margin-bottom: 4px; }
+.stat-sub { font-size: var(--fs-xs); color: var(--slate); letter-spacing: 0.1em; }
+
+/* PREVIEW — TABS */
+.preview { background: var(--deep); }
+.preview-header { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end; margin-bottom: 60px; }
+
+/* Phone mockup */
+.phone-showcase {
+  display: flex; gap: 24px; align-items: flex-start;
+  justify-content: center; margin-top: 20px;
+}
+.phone-tabs-nav {
+  display: flex; flex-direction: column; gap: 8px;
+  flex-shrink: 0; padding-top: 16px;
+}
+.ptab-btn {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 12px 16px;
+  font-family: 'DM Mono', monospace; font-size: var(--fs-xs);
+  color: var(--slate); letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s; width: 180px;
+  text-align: left;
+}
+.ptab-btn:hover { border-color: var(--gold); color: var(--white); }
+.ptab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(200,169,74,0.07); }
+.ptab-icon { font-size: 18px; flex-shrink: 0; }
+.ptab-info { display: flex; flex-direction: column; gap: 2px; }
+.ptab-label { font-size: 11px; font-weight: 500; }
+.ptab-desc { font-size: 10px; color: var(--slate); letter-spacing: 0; text-transform: none; line-height: 1.3; }
+.ptab-btn.active .ptab-desc { color: rgba(200,169,74,0.6); }
+
+.phone-frame {
+  width: 280px; background: #0A0A14;
+  border: 1px solid var(--edge); border-radius: 40px;
+  padding: 12px; flex-shrink: 0;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,169,74,0.1);
+}
+.phone-inner {
+  background: #08080F; border-radius: 30px; overflow: hidden;
+  min-height: 560px; position: relative;
+}
+.phone-status {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px 4px; font-size: 10px; color: var(--slate);
+}
+.phone-notch {
+  width: 80px; height: 22px; background: #0A0A14;
+  border-radius: 0 0 14px 14px; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+}
+.phone-screen { padding: 8px 16px 16px; }
+.phone-tab-content { display: none; }
+.phone-tab-content.active { display: block; }
+
+/* Screen contents */
+.ph-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-top: 8px; }
+.ph-kanji { font-family: 'Shippori Mincho'; font-size: 24px; color: #C8A94A; }
+.ph-title { font-size: 13px; color: #E5E7EB; font-weight: 600; }
+.ph-card { background: #111118; border: 1px solid #1E1E2E; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+.ph-label { font-size: 9px; color: #6B7280; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.ph-pct { font-size: 28px; font-weight: 700; color: #34D399; }
+.ph-bar-bg { height: 4px; background: #1E1E2E; border-radius: 2px; overflow: hidden; margin-top: 8px; }
+.ph-bar-fill { height: 100%; border-radius: 2px; }
+.ph-habit-row {
+  display: flex; align-items: center; gap: 10px;
+  background: #111118; border: 1px solid #1E1E2E; border-radius: 10px;
+  padding: 10px 12px; margin-bottom: 7px;
+}
+.ph-habit-done { border-color: #065F46; background: #022C22; }
+.ph-habit-emoji { font-size: 16px; }
+.ph-habit-name { font-size: 11px; color: #E5E7EB; flex: 1; }
+.ph-habit-check { font-size: 13px; color: #34D399; }
+.ph-kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.ph-kpi { background: #111118; border: 1px solid #1E1E2E; border-radius: 10px; padding: 12px; text-align: center; }
+.ph-kpi-val { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+.ph-kpi-lbl { font-size: 8px; color: #6B7280; letter-spacing: 0.2em; text-transform: uppercase; }
+.ph-ring-area { display: flex; justify-content: center; align-items: center; margin: 16px 0; position: relative; height: 120px; }
+.ph-ring { position: absolute; border-radius: 16px; border-style: solid; }
+.ph-week-row { display: flex; justify-content: space-between; margin-top: 8px; }
+.ph-day { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ph-day-dot { width: 24px; height: 24px; border-radius: 6px; }
+.ph-day-lbl { font-size: 8px; color: #6B7280; }
+.ph-post { background: #111118; border: 1px solid #1E1E2E; border-radius: 12px; overflow: hidden; margin-bottom: 8px; }
+.ph-post-img { width: 100%; height: 120px; background: linear-gradient(135deg, #1a1a2e, #16213e); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+.ph-post-body { padding: 10px 12px; }
+.ph-post-user { font-size: 10px; color: #C8A94A; margin-bottom: 4px; }
+.ph-post-text { font-size: 10px; color: #9CA3AF; }
+.ph-setup-row {
+  display: flex; align-items: center; gap: 10px;
+  background: #111118; border: 1px solid #1E1E2E; border-radius: 10px;
+  padding: 12px; margin-bottom: 8px;
+}
+.ph-setup-name { font-size: 11px; color: #E5E7EB; flex: 1; }
+.ph-edit-icon { font-size: 14px; }
+.ph-leaderboard { background: #111118; border: 1px solid #C8A94A44; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+.ph-lb-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #1E1E2E; }
+.ph-lb-row:last-child { border-bottom: none; }
+.ph-lb-rank { font-size: 10px; color: #C8A94A; width: 20px; font-weight: 700; }
+.ph-lb-name { font-size: 10px; color: #E5E7EB; flex: 1; }
+.ph-lb-pct { font-size: 10px; color: #34D399; }
+
+/* Tab bottom bar phone */
+.phone-tabbar {
+  display: flex; background: #0D0D18; border-top: 1px solid #1E1E2E;
+  padding: 8px 4px 4px;
+}
+.phone-tabbar-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 4px 2px; font-size: 8px; color: #6B7280; letter-spacing: 0.05em;
+  cursor: pointer; transition: color 0.2s;
+}
+.phone-tabbar-item.active { color: #C8A94A; }
+.phone-tabbar-icon { font-size: 14px; }
+
+/* tab hook cards */
+.tab-hooks { display: flex; flex-direction: column; gap: 16px; padding-top: 16px; }
+.hook-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 20px 22px;
+  display: flex; gap: 14px; align-items: flex-start;
+  transition: border-color 0.3s;
+}
+.hook-card.active-hook { border-color: var(--gold); }
+.hook-icon { font-size: 24px; flex-shrink: 0; }
+.hook-body { display: flex; flex-direction: column; gap: 4px; }
+.hook-title { font-size: var(--fs-sm); color: var(--white); font-weight: 500; }
+.hook-text { font-size: 12px; color: var(--slate); line-height: 1.6; }
+.hook-tag {
+  display: inline-block; margin-top: 6px;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); border: 1px solid rgba(200,169,74,0.25);
+  padding: 3px 8px; border-radius: var(--r);
+}
+
+/* COMMUNITY */
+.community-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 60px; }
+.testimonials { display: flex; flex-direction: column; gap: 20px; }
+.testi-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 28px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.testi-card:hover { border-color: var(--gold); transform: translateX(4px); }
+.testi-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.testi-avatar { width: 44px; height: 44px; background: var(--edge); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.testi-name { font-size: var(--fs-sm); color: var(--white); font-weight: 500; }
+.testi-handle { font-size: var(--fs-xs); color: var(--slate); }
+.testi-streak { font-family: 'Bebas Neue'; font-size: 28px; color: var(--gold); line-height: 1; }
+.testi-streak-l { font-size: 8px; color: var(--slate); letter-spacing: 0.15em; text-transform: uppercase; }
+.testi-text { font-size: var(--fs-sm); color: var(--silver); line-height: 1.7; margin-bottom: 12px; }
+.testi-stars { color: var(--gold); font-size: 14px; letter-spacing: 3px; }
+.community-manifesto { margin-bottom: 40px; }
+.cm-line { display: flex; align-items: baseline; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-md); color: var(--silver); }
+.cm-kanji { font-family: 'Shippori Mincho'; font-size: 28px; color: var(--gold); flex-shrink: 0; }
+.community-cta-box {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 40px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-kanji-big {
+  display: block; font-family: 'Shippori Mincho'; font-size: 56px;
+  color: var(--gold); margin-bottom: 16px;
+}
+.cta-headline { font-family: 'Bebas Neue'; font-size: 36px; color: var(--white); letter-spacing: 0.05em; margin-bottom: 12px; }
+.cta-sub { font-size: var(--fs-sm); color: var(--slate); line-height: 1.7; margin-bottom: 24px; }
+
+/* PRICING */
+.pricing { background: var(--deep); }
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; max-width: 760px; margin-left: auto; margin-right: auto; }
+.price-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 40px 36px;
+  display: flex; flex-direction: column; gap: 0;
+  position: relative; transition: transform 0.3s, border-color 0.3s;
+}
+.price-card:hover { transform: translateY(-4px); }
+.price-card.featured { border-color: var(--gold); }
+.price-card.disabled { opacity: 0.55; pointer-events: none; }
+.price-badge {
+  display: inline-block; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--ink); font-size: 10px;
+  letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase;
+  padding: 4px 16px; border-radius: 20px;
+}
+.price-soon {
+  display: inline-block; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--slate); color: var(--ink); font-size: 10px;
+  letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase;
+  padding: 4px 16px; border-radius: 20px;
+}
+.price-tier { font-size: var(--fs-xs); letter-spacing: 0.25em; text-transform: uppercase; color: var(--slate); margin-bottom: 20px; }
+.price-amount {
+  font-family: 'Bebas Neue', sans-serif; font-size: 72px;
+  color: var(--white); line-height: 1; margin-bottom: 6px;
+}
+.price-amount span { font-size: 28px; color: var(--slate); }
+.price-period { font-size: var(--fs-xs); color: var(--slate); letter-spacing: 0.1em; margin-bottom: 8px; }
+.price-trial { font-size: var(--fs-xs); color: var(--jade); letter-spacing: 0.05em; margin-bottom: 24px; padding: 6px 12px; background: rgba(45,206,160,0.08); border: 1px solid rgba(45,206,160,0.2); border-radius: var(--r); display: inline-block; }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; flex: 1; margin-bottom: 32px; }
+.price-features li { display: flex; align-items: center; gap: 10px; font-size: var(--fs-sm); color: var(--silver); }
+.price-features li::before { content: '→'; color: var(--gold); font-size: 12px; flex-shrink: 0; }
+.price-features li.dim { opacity: 0.35; }
+.price-features li.dim::before { content: '—'; color: var(--slate); }
+.btn-price {
+  display: block; text-align: center;
+  font-family: 'DM Mono', monospace; font-size: var(--fs-xs);
+  letter-spacing: 0.2em; font-weight: 500; text-transform: uppercase;
+  padding: 16px; border-radius: var(--r); transition: all 0.2s;
+}
+.btn-price-gold { background: var(--gold); color: var(--ink); }
+.btn-price-gold:hover { background: var(--gold2); transform: translateY(-2px); }
+.btn-price-ghost { border: 1px solid var(--line); color: var(--slate); }
+.btn-price-ghost:hover { border-color: var(--gold); color: var(--white); }
+
+/* FAQ */
+.faq-grid { display: grid; grid-template-columns: 280px 1fr; gap: 80px; margin-top: 60px; }
+.faq-left-visual { position: sticky; top: 120px; }
+.faq-kanji-stack { position: relative; height: 200px; }
+.faq-kanji-big { font-family: 'Shippori Mincho'; font-size: 160px; color: var(--gold); opacity: 0.15; line-height: 1; }
+.faq-kanji-med { font-family: 'Shippori Mincho'; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; bottom: 0; right: 0; line-height: 1; }
+.faq-tagline { font-size: var(--fs-sm); color: var(--slate); line-height: 1.8; margin-top: 20px; }
+.faq-tagline strong { color: var(--white); font-weight: 500; }
+.faq-list { display: flex; flex-direction: column; }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-q {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 0; font-family: 'DM Mono', monospace; font-size: var(--fs-md);
+  color: var(--white); text-align: left; cursor: pointer; gap: 20px;
+  transition: color 0.2s;
+}
+.faq-q:hover { color: var(--gold); }
+.faq-arrow { font-size: 18px; flex-shrink: 0; transition: transform 0.3s, border-color 0.3s, color 0.3s; }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease); }
+.faq-a-inner { padding: 0 0 20px; font-size: var(--fs-sm); color: var(--slate); line-height: 1.8; }
+.faq-item.open .faq-a { max-height: 200px; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); border-color: var(--gold); color: var(--gold); }
+
+/* FINAL CTA */
+.final-cta {
+  position: relative; padding: 120px 48px;
+  text-align: center; overflow: hidden;
+  background: var(--deep);
+}
+.final-cta-grid-lines {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(200,169,74,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,169,74,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black, transparent);
+}
+.final-cta-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 500px; height: 300px;
+  background: radial-gradient(ellipse, rgba(200,169,74,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.final-cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.final-cta-kanji {
+  display: block; font-family: 'Shippori Mincho'; font-size: 56px;
+  color: var(--gold); margin-bottom: 24px;
+}
+.final-cta h2 {
+  font-family: 'Bebas Neue'; font-size: clamp(56px, 10vw, 96px);
+  line-height: 0.9; margin-bottom: 24px;
+}
+.final-cta h2 em { font-style: normal; color: var(--gold); }
+.final-cta p { font-size: var(--fs-md); color: var(--silver); line-height: 1.8; margin-bottom: 40px; }
+.final-note { font-size: var(--fs-xs); color: var(--slate); margin-top: 16px; letter-spacing: 0.1em; }
+
+/* SUBSCRIPTION SELECTOR */
+.sub-selector { max-width: 520px; margin: 0 auto; }
+.sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.sub-tab {
+  flex: 1; padding: 14px; border-radius: var(--r);
+  font-family: 'DM Mono', monospace; font-size: var(--fs-xs);
+  letter-spacing: 0.15em; text-transform: uppercase;
+  border: 1px solid var(--line); color: var(--slate);
+  background: var(--card); cursor: pointer;
+  transition: all 0.2s; display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+}
+.sub-tab:hover:not(:disabled) { border-color: var(--gold); color: var(--white); }
+.sub-tab.active { border-color: var(--gold); color: var(--gold); background: rgba(200,169,74,0.08); }
+.sub-tab:disabled { opacity: 0.4; cursor: not-allowed; }
+.sub-tab-price { font-size: 22px; font-family: 'Bebas Neue'; }
+.sub-tab-label { font-size: 9px; }
+.sub-tab-soon { font-size: 9px; color: var(--slate); margin-top: 2px; }
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+.sub-panel-content {
+  background: var(--card); border: 1px solid var(--gold);
+  border-radius: var(--r); padding: 24px; margin-bottom: 12px;
+}
+.sub-panel-title { font-size: var(--fs-sm); color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+.sub-panel-desc { font-size: var(--fs-sm); color: var(--slate); line-height: 1.7; margin-bottom: 16px; }
+.sub-panel-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.sub-panel-features li { font-size: var(--fs-xs); color: var(--silver); display: flex; gap: 8px; }
+.sub-panel-features li::before { content: '✓'; color: var(--jade); }
+.sub-btn {
+  display: block; width: 100%; padding: 16px;
+  background: var(--gold); color: var(--ink);
+  font-family: 'DM Mono'; font-size: var(--fs-xs);
+  letter-spacing: 0.2em; text-transform: uppercase;
+  border-radius: var(--r); cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  text-align: center;
+}
+.sub-btn:hover { background: var(--gold2); transform: translateY(-1px); }
+.sub-trial-note { font-size: 11px; color: var(--jade); text-align: center; margin-top: 8px; }
+
+/* FOOTER */
+footer { background: var(--ink); border-top: 1px solid var(--line); padding: 80px 48px 40px; }
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+.footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.footer-brand-desc { font-size: var(--fs-sm); color: var(--slate); line-height: 1.8; max-width: 280px; }
+.footer-col h4 { font-size: var(--fs-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); margin-bottom: 20px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.footer-col ul li a { font-size: var(--fs-sm); color: var(--slate); transition: color 0.2s; }
+.footer-col ul li a:hover { color: var(--gold); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; border-top: 1px solid var(--line); }
+.footer-copy { font-size: var(--fs-xs); color: var(--slate); letter-spacing: 0.1em; }
+.footer-kanji { font-family: 'Shippori Mincho'; font-size: 28px; color: var(--gold); opacity: 0.4; }
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .nav.scrolled { padding: 12px 24px; }
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  .nav-mobile-toggle { display: flex; }
+  .problem-grid { grid-template-columns: 1fr; gap: 48px; }
+  .features-header { grid-template-columns: 1fr; gap: 32px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .steps::before { display: none; }
+  .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
+  .community-grid { grid-template-columns: 1fr; gap: 48px; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 440px; }
+  .faq-grid { grid-template-columns: 1fr; }
+  .faq-left-visual { display: none; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  .hero-bottom { flex-direction: column; align-items: flex-start; gap: 32px; }
+  .preview-header { grid-template-columns: 1fr; gap: 32px; }
+  .phone-showcase { flex-direction: column; align-items: center; }
+  .phone-tabs-nav { flex-direction: row; flex-wrap: wrap; width: 100%; }
+  .ptab-btn { width: calc(50% - 4px); }
+  .tab-hooks { display: none; }
+}
+@media (max-width: 600px) {
+  .steps { grid-template-columns: 1fr; }
+  .stats-bar-inner { grid-template-columns: 1fr 1fr; }
+  .stat-item { padding: 28px 20px; }
+  .footer-top { grid-template-columns: 1fr; }
+  .hero-headline { font-size: clamp(56px, 14vw, 90px); }
+  .section { padding: 80px 24px; }
+  .hero { padding: 100px 24px 80px; }
+  .hero-stats { display: none; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="noise"></div>
+
+<!-- NAVBAR -->
+<nav class="nav" id="navbar">
+  <div class="nav-logo">
+    <span class="nav-kanji">改善</span>
+    <span class="nav-wordmark">KAIZEN TRACKER</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">Funciones</a></li>
+    <li><a href="#preview">App Preview</a></li>
+    <li><a href="#community">Comunidad</a></li>
+    <li><a href="#pricing">Precios</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#get" class="nav-cta">Comenzar Ahora →</a>
+  <button class="nav-mobile-toggle" id="menuToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-bg-kanji" style="font-size:400px;top:0;right:-80px;opacity:0.015;">改</div>
+  <div class="hero-bg-kanji" style="font-size:200px;bottom:100px;left:20px;opacity:0.018;">善</div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-n">5</div>
+      <div class="hero-stat-l">Tabs</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-n">10</div>
+      <div class="hero-stat-l">Hábitos</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-n">∞</div>
+      <div class="hero-stat-l">Comunidad</div>
+    </div>
+  </div>
+
+  <div style="max-width:1100px;margin:0 auto;width:100%;">
+    <div class="hero-eyebrow">改善 · Comunidad del 1% · 2026</div>
+    <h1 class="hero-headline">
+      <span class="line">HABIT</span>
+      <span class="line">TRACKER</span>
+    </h1>
+    <span class="hero-kanji-inline">改善</span>
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        La app de tracking de hábitos de la comunidad Kaizen.
+        <strong>Registra tu día, analiza tu progreso, comparte tus logros</strong>
+        y compite con tu comunidad — todo desde tu iPhone. Sin hojas de cálculo. Sin complicaciones.
+      </p>
+      <div class="hero-actions">
+        <a href="#get" class="btn-primary">↓ Comenzar Ahora</a>
+        <a href="#preview" class="btn-ghost">Ver la App →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner" id="marqueeInner">
+    <span>改善</span><span class="dot">·</span>
+    <span>1% MEJOR CADA DÍA</span><span class="dot">·</span>
+    <span>RACHAS EN TIEMPO REAL</span><span class="dot">·</span>
+    <span>ANALYTICS AVANZADOS</span><span class="dot">·</span>
+    <span>COMUNIDAD EN VIVO</span><span class="dot">·</span>
+    <span>HÁBITOS PERSONALIZABLES</span><span class="dot">·</span>
+    <span>KAIZEN COMMUNITY</span><span class="dot">·</span>
+    <span>改善</span><span class="dot">·</span>
+    <span>1% MEJOR CADA DÍA</span><span class="dot">·</span>
+    <span>RACHAS EN TIEMPO REAL</span><span class="dot">·</span>
+    <span>ANALYTICS AVANZADOS</span><span class="dot">·</span>
+    <span>COMUNIDAD EN VIVO</span><span class="dot">·</span>
+    <span>HÁBITOS PERSONALIZABLES</span><span class="dot">·</span>
+    <span>KAIZEN COMMUNITY</span><span class="dot">·</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section problem" id="problem">
+  <div class="section-inner">
+    <div class="problem-grid">
+      <div>
+        <div class="s-tag rv">El Problema</div>
+        <h2 class="s-h2 rv rv-d1">LAS APPS/SHEETS<br>DE HÁBITOS<br><em>no funcionan</em></h2>
+        <ul class="problem-list rv rv-d2">
+          <li class="problem-item">
+            <div class="p-icon">😤</div>
+            <div class="p-text">
+              <strong>Son bonitas pero vacías</strong>
+              <span>Notificaciones de color sin métricas reales. Solo checkboxes que no te dicen nada útil.</span>
+            </div>
+          </li>
+          <li class="problem-item">
+            <div class="p-icon">📊</div>
+            <div class="p-text">
+              <strong>Sin analytics reales</strong>
+              <span>No sabes cuál hábito te está costando más ni cuánto has mejorado este mes vs el pasado.</span>
+            </div>
+          </li>
+          <li class="problem-item">
+            <div class="p-icon">🔥</div>
+            <div class="p-text">
+              <strong>Las rachas mueren sin comunidad</strong>
+              <span>Un trackear solo es aburrido. Es fácil rendirse a los 7 días sin una comunidad que te inspira.</span>
+            </div>
+          </li>
+          <li class="problem-item">
+            <div class="p-icon">🧩</div>
+            <div class="p-text">
+              <strong>No están diseñadas para mejorar</strong>
+              <span>Te dan checkboxes, no insights. Kaizen no es marcar casillas — es medir tu evolución.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="problem-right rv rv-d3">
+        <div class="problem-kanji-float">改</div>
+        <div class="problem-quote-card">
+          <p class="pq-text">
+            "Diseñe Kaizen Tracker para ayudar a las personas a convertir disciplina en progreso visible. No solo llevarla tatuada en el cuello. Demuestra que la mejora diaria, aunque sea mínima, termina transformando tu vida completa."
+          </p>
+          <div class="pq-attr">— Saul Chavez · Fundador de Kaizen Tracker</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="features-header">
+      <div>
+        <div class="s-tag rv">La Solución</div>
+        <h2 class="s-h2 rv rv-d1">LA APP QUE<br>TE HACE<br><em>EVOLUCIONAR</em></h2>
+      </div>
+      <p class="s-lead rv rv-d2">
+        Una app diseñada desde cero para la filosofía Kaizen.
+        Registra, analiza, comparte e inspira — todo en un solo lugar, en tiempo real.
+      </p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card rv">
+        <div class="feat-num">01</div>
+        <div class="feat-icon">☑️</div>
+        <div class="feat-title">Registro Diario</div>
+        <div class="feat-desc">Marca tus hábitos del día en menos de 60 segundos. Progreso visual en tiempo real con barras de porcentaje y colores dinámicos.</div>
+        <span class="feat-tag">Tap · Sync · Listo</span>
+      </div>
+      <div class="feat-card rv rv-d1">
+        <div class="feat-num">02</div>
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">Dashboard en Tiempo Real</div>
+        <div class="feat-desc">KPIs de hoy, semana y racha activa. Heatmap de los últimos 7 días. Ves de un vistazo si estás en racha o necesitas acelerar.</div>
+        <span class="feat-tag">HOY · SEMANA · RACHA</span>
+      </div>
+      <div class="feat-card rv rv-d2">
+        <div class="feat-num">03</div>
+        <div class="feat-icon">📈</div>
+        <div class="feat-title">Analytics Avanzados</div>
+        <div class="feat-desc">3 anillos cuadrados progresivos: HOY (verde), SEMANA (plata), MES (dorado). Ranking de hábitos por consistencia del mes.</div>
+        <span class="feat-tag">Rings · Rankings · Insights</span>
+      </div>
+      <div class="feat-card rv rv-d1">
+        <div class="feat-num">04</div>
+        <div class="feat-icon">🔥</div>
+        <div class="feat-title">Comunidad del 1%</div>
+        <div class="feat-desc">Publica tus logros con foto, ve el feed de la comunidad, compite en el leaderboard mensual. La accountability que ninguna app tiene.</div>
+        <span class="feat-tag">Feed · Leaderboard · Logros</span>
+      </div>
+      <div class="feat-card rv rv-d2">
+        <div class="feat-num">05</div>
+        <div class="feat-icon">⚙️</div>
+        <div class="feat-title">Setup Personalizable</div>
+        <div class="feat-desc">Edita nombre, emoji y meta de cada hábito. Elimina los que no usas. La app se adapta a tu estilo de vida, no al revés.</div>
+        <span class="feat-tag">Tus hábitos · Tu app</span>
+      </div>
+      <div class="feat-card rv rv-d3">
+        <div class="feat-num">06</div>
+        <div class="feat-icon">🔔</div>
+        <div class="feat-title">Notificaciones Inteligentes</div>
+        <div class="feat-desc">3 recordatorios diarios automáticos: 5AM para empezar, 1PM para revisar, 9PM para cerrar el día fuerte. Nunca olvides tu racha.</div>
+        <span class="feat-tag">5AM · 1PM · 9PM</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how" id="how">
+  <div class="section-inner">
+    <div class="s-tag rv">Cómo Funciona</div>
+    <h2 class="s-h2 rv rv-d1">4 PASOS.<br><em>SIMPLE.</em></h2>
+    <div class="steps">
+      <div class="step rv">
+        <div class="step-circle"><div class="step-circle-inner">01</div></div>
+        <div class="step-icon">📲</div>
+        <div class="step-title">Descarga la App</div>
+        <div class="step-desc">Disponible en TestFlight para iOS. Instalación en menos de 2 minutos. Crea tu cuenta y listo.</div>
+      </div>
+      <div class="step rv rv-d1">
+        <div class="step-circle"><div class="step-circle-inner">02</div></div>
+        <div class="step-icon">⚙️</div>
+        <div class="step-title">Personaliza tus Hábitos</div>
+        <div class="step-desc">Ve a Setup y ajusta los 10 hábitos con tu emoji, nombre y meta. La app se adapta a ti en segundos.</div>
+      </div>
+      <div class="step rv rv-d2">
+        <div class="step-circle"><div class="step-circle-inner">03</div></div>
+        <div class="step-icon">✅</div>
+        <div class="step-title">Registra tu Día</div>
+        <div class="step-desc">Abre HOY, toca cada hábito completado. Menos de 60 segundos. Tu racha se actualiza automáticamente.</div>
+      </div>
+      <div class="step rv rv-d3">
+        <div class="step-circle"><div class="step-circle-inner">04</div></div>
+        <div class="step-icon">🏆</div>
+        <div class="step-title">Comparte y Compite</div>
+        <div class="step-desc">Publica tu logro del día, sube al leaderboard y motiva a tu comunidad. El 1% se construye juntos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-item rv">
+      <div class="stat-n">5</div>
+      <div class="stat-l">Tabs de la App</div>
+      <div class="stat-sub">HOY · Dashboard · Analytics · Comunidad · Setup</div>
+    </div>
+    <div class="stat-item rv rv-d1">
+      <div class="stat-n">10</div>
+      <div class="stat-l">Hábitos configurables</div>
+      <div class="stat-sub">Nombre · Emoji · Meta personalizables</div>
+    </div>
+    <div class="stat-item rv rv-d2">
+      <div class="stat-n">3</div>
+      <div class="stat-l">Notificaciones diarias</div>
+      <div class="stat-sub">5AM · 1PM · 9PM</div>
+    </div>
+    <div class="stat-item rv rv-d3">
+      <div class="stat-n">1%</div>
+      <div class="stat-l">Comunidad activa</div>
+      <div class="stat-sub">Feed · Logros · Leaderboard en vivo</div>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW — APP TABS -->
+<section class="section preview" id="preview">
+  <div class="section-inner">
+    <div class="preview-header">
+      <div>
+        <div class="s-tag rv">App Preview</div>
+        <h2 class="s-h2 rv rv-d1">ASÍ SE VE<br><em>EN TU iPhone</em></h2>
+      </div>
+      <p class="s-lead rv rv-d2" style="max-width:380px;">
+        5 tabs diseñadas para que mejorar sea un ritual, no una tarea.
+        Explora cada tab y descubre lo que te espera.
+      </p>
+    </div>
+
+    <div class="phone-showcase rv rv-d2">
+      <!-- Tab buttons -->
+      <div class="phone-tabs-nav">
+        <button class="ptab-btn active" onclick="switchTab('hoy', this)">
+          <div class="ptab-icon">☑️</div>
+          <div class="ptab-info">
+            <div class="ptab-label">HOY</div>
+            <div class="ptab-desc">Registro diario</div>
+          </div>
+        </button>
+        <button class="ptab-btn" onclick="switchTab('dashboard', this)">
+          <div class="ptab-icon">📊</div>
+          <div class="ptab-info">
+            <div class="ptab-label">DASHBOARD</div>
+            <div class="ptab-desc">KPIs + racha</div>
+          </div>
+        </button>
+        <button class="ptab-btn" onclick="switchTab('analytics', this)">
+          <div class="ptab-icon">📈</div>
+          <div class="ptab-info">
+            <div class="ptab-label">ANALYTICS</div>
+            <div class="ptab-desc">Rings + ranking</div>
+          </div>
+        </button>
+        <button class="ptab-btn" onclick="switchTab('comunidad', this)">
+          <div class="ptab-icon">🔥</div>
+          <div class="ptab-info">
+            <div class="ptab-label">COMUNIDAD</div>
+            <div class="ptab-desc">Feed + top 5</div>
+          </div>
+        </button>
+        <button class="ptab-btn" onclick="switchTab('setup', this)">
+          <div class="ptab-icon">⚙️</div>
+          <div class="ptab-info">
+            <div class="ptab-label">SETUP</div>
+            <div class="ptab-desc">Personalización</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Phone frame -->
+      <div class="phone-frame">
+        <div class="phone-inner">
+          <div class="phone-notch"></div>
+          <div class="phone-status">
+            <span>9:41</span><span>●●●</span>
+          </div>
+
+          <!-- HOY -->
+          <div class="phone-tab-content active" id="tab-hoy">
+            <div class="phone-screen">
+              <div class="ph-header">
+                <span class="ph-kanji">改善</span>
+                <span class="ph-title">Lun 9</span>
+              </div>
+              <div class="ph-card">
+                <div class="ph-label">PROGRESO DEL DÍA</div>
+                <div class="ph-pct">70%</div>
+                <div class="ph-bar-bg"><div class="ph-bar-fill" style="width:70%;background:#34D399"></div></div>
+                <div style="font-size:9px;color:#6B7280;margin-top:6px;">7 de 10 hábitos completados</div>
+              </div>
+              <div style="font-size:9px;color:#6B7280;letter-spacing:0.2em;margin-bottom:8px;">HOY</div>
+              <div class="ph-habit-row ph-habit-done"><span class="ph-habit-emoji">🧘</span><span class="ph-habit-name" style="color:#34D399">Meditación</span><span class="ph-habit-check">✓</span></div>
+              <div class="ph-habit-row ph-habit-done"><span class="ph-habit-emoji">📚</span><span class="ph-habit-name" style="color:#34D399">Lectura</span><span class="ph-habit-check">✓</span></div>
+              <div class="ph-habit-row ph-habit-done"><span class="ph-habit-emoji">🏃</span><span class="ph-habit-name" style="color:#34D399">Ejercicio</span><span class="ph-habit-check">✓</span></div>
+              <div class="ph-habit-row"><span class="ph-habit-emoji">💧</span><span class="ph-habit-name">Agua 2L</span></div>
+              <div class="ph-habit-row"><span class="ph-habit-emoji">🎯</span><span class="ph-habit-name">Trabajo Profundo</span></div>
+            </div>
+          </div>
+
+          <!-- DASHBOARD -->
+          <div class="phone-tab-content" id="tab-dashboard">
+            <div class="phone-screen">
+              <div class="ph-header"><span class="ph-kanji">改善</span><span class="ph-title">Dashboard</span></div>
+              <div class="ph-kpi-row">
+                <div class="ph-kpi"><div class="ph-kpi-val" style="color:#34D399">70%</div><div class="ph-kpi-lbl">HOY</div></div>
+                <div class="ph-kpi"><div class="ph-kpi-val" style="color:#C8A94A">7/10</div><div class="ph-kpi-lbl">HÁBITOS</div></div>
+                <div class="ph-kpi"><div class="ph-kpi-val" style="color:#34D399">64%</div><div class="ph-kpi-lbl">SEMANA</div></div>
+                <div class="ph-kpi"><div class="ph-kpi-val" style="color:#34D399">5 días</div><div class="ph-kpi-lbl">RACHA</div></div>
+              </div>
+              <div style="font-size:9px;color:#6B7280;letter-spacing:0.2em;margin-bottom:8px;">📅 ESTA SEMANA</div>
+              <div class="ph-card" style="padding:10px;">
+                <div class="ph-week-row">
+                  <div class="ph-day"><div class="ph-day-dot" style="background:#374151"></div><div class="ph-day-lbl">Mar</div></div>
+                  <div class="ph-day"><div class="ph-day-dot" style="background:#374151"></div><div class="ph-day-lbl">Mié</div></div>
+                  <div class="ph-day"><div class="ph-day-dot" style="background:#C8A94A"></div><div class="ph-day-lbl">Jue</div></div>
+                  <div class="ph-day"><div class="ph-day-dot" style="background:#34D399"></div><div class="ph-day-lbl">Vie</div></div>
+                  <div class="ph-day"><div class="ph-day-dot" style="background:#34D399"></div><div class="ph-day-lbl">Sáb</div></div>
+                  <div class="ph-day"><div class="ph-day-dot" style="background:#C8A94A"></div><div class="ph-day-lbl">Dom</div></div>
+                  <div class="ph-day"><div class="ph-day-dot" style="background:#34D399;border:2px solid white"></div><div class="ph-day-lbl" style="color:white">Lun</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ANALYTICS -->
+          <div class="phone-tab-content" id="tab-analytics">
+            <div class="phone-screen">
+              <div class="ph-header"><span class="ph-kanji">改善</span><span class="ph-title">Analytics</span></div>
+              <div style="display:flex;justify-content:center;margin:8px 0 16px;">
+                <div style="position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center;">
+                  <div style="position:absolute;inset:0;border:10px solid #C8A94A33;border-radius:24px;"></div>
+                  <div style="position:absolute;inset:0;border:10px solid #C8A94A;border-radius:24px;clip-path:polygon(0 0,60% 0,60% 100%,0 100%);"></div>
+                  <div style="position:absolute;inset:14px;border:10px solid #A8B0C033;border-radius:18px;"></div>
+                  <div style="position:absolute;inset:14px;border:10px solid #A8B0C0;border-radius:18px;clip-path:polygon(0 0,74% 0,74% 100%,0 100%);"></div>
+                  <div style="position:absolute;inset:28px;border:10px solid #34D39933;border-radius:12px;"></div>
+                  <div style="position:absolute;inset:28px;border:10px solid #34D399;border-radius:12px;clip-path:polygon(0 0,70% 0,70% 100%,0 100%);"></div>
+                  <div style="text-align:center;z-index:1;"><div style="font-size:16px;font-weight:700;color:#34D399">70%</div><div style="font-size:7px;color:#6B7280;letter-spacing:0.1em">HOY</div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;padding:8px 0 0 16px;justify-content:center;">
+                  <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:#34D399"></div><div style="font-size:9px;color:#6B7280;width:44px;">HOY</div><div style="font-size:12px;font-weight:700;color:#34D399">70%</div></div>
+                  <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:#A8B0C0"></div><div style="font-size:9px;color:#6B7280;width:44px;">SEMANA</div><div style="font-size:12px;font-weight:700;color:#A8B0C0">64%</div></div>
+                  <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:#C8A94A"></div><div style="font-size:9px;color:#6B7280;width:44px;">MES</div><div style="font-size:12px;font-weight:700;color:#C8A94A">58%</div></div>
+                </div>
+              </div>
+              <div style="font-size:9px;color:#6B7280;letter-spacing:0.2em;margin-bottom:8px;">📊 HÁBITOS ESTE MES</div>
+              <div class="ph-card" style="padding:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:10px;color:#E5E7EB">🧘 Meditación</span><span style="font-size:10px;font-weight:700;color:#34D399">87%</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-size:10px;color:#E5E7EB">🏃 Ejercicio</span><span style="font-size:10px;font-weight:700;color:#34D399">80%</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:10px;color:#E5E7EB">📚 Lectura</span><span style="font-size:10px;font-weight:700;color:#C8A94A">70%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMUNIDAD -->
+          <div class="phone-tab-content" id="tab-comunidad">
+            <div class="phone-screen">
+              <div class="ph-header"><span class="ph-kanji">改善</span><span class="ph-title">Comunidad</span></div>
+              <div class="ph-kpi-row">
+                <div class="ph-kpi"><div class="ph-kpi-val" style="color:#34D399">24</div><div class="ph-kpi-lbl">USUARIOS</div></div>
+                <div class="ph-kpi"><div class="ph-kpi-val" style="color:#C8A94A">47</div><div class="ph-kpi-lbl">LOGROS</div></div>
+              </div>
+              <div class="ph-leaderboard">
+                <div style="font-size:9px;color:#6B7280;letter-spacing:0.2em;margin-bottom:8px;">🏆 TOP 5 DEL MES</div>
+                <div class="ph-lb-row"><span class="ph-lb-rank">#1</span><span class="ph-lb-name">saulchavez_</span><span class="ph-lb-pct">94%</span></div>
+                <div class="ph-lb-row"><span class="ph-lb-rank">#2</span><span class="ph-lb-name">carloskaizen</span><span class="ph-lb-pct">88%</span></div>
+                <div class="ph-lb-row"><span class="ph-lb-rank">#3</span><span class="ph-lb-name">vale_1percent</span><span class="ph-lb-pct">82%</span></div>
+              </div>
+              <div class="ph-post">
+                <div class="ph-post-img">🏃‍♂️</div>
+                <div class="ph-post-body">
+                  <div class="ph-post-user">saulchavez_ · ahora</div>
+                  <div class="ph-post-text">5k Running + legday 🦵</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SETUP -->
+          <div class="phone-tab-content" id="tab-setup">
+            <div class="phone-screen">
+              <div class="ph-header"><span class="ph-kanji">改善</span><span class="ph-title">Setup</span></div>
+              <div class="ph-card" style="margin-bottom:12px;">
+                <div style="font-size:9px;color:#6B7280;letter-spacing:0.2em;margin-bottom:4px;">CUENTA</div>
+                <div style="font-size:11px;color:#E5E7EB;">tu@email.com</div>
+              </div>
+              <div style="font-size:9px;color:#6B7280;letter-spacing:0.2em;margin-bottom:8px;">⚙️ MIS HÁBITOS</div>
+              <div class="ph-setup-row"><span style="font-size:16px;">🧘</span><div style="flex:1"><div style="font-size:11px;color:#E5E7EB;">Meditación</div><div style="font-size:9px;color:#6B7280">10 min</div></div><span class="ph-edit-icon">✏️</span></div>
+              <div class="ph-setup-row"><span style="font-size:16px;">📚</span><div style="flex:1"><div style="font-size:11px;color:#E5E7EB;">Lectura</div><div style="font-size:9px;color:#6B7280">30 min</div></div><span class="ph-edit-icon">✏️</span></div>
+              <div class="ph-setup-row"><span style="font-size:16px;">🏃</span><div style="flex:1"><div style="font-size:11px;color:#E5E7EB;">Ejercicio</div><div style="font-size:9px;color:#6B7280">30 min</div></div><span class="ph-edit-icon">✏️</span></div>
+              <div class="ph-setup-row"><span style="font-size:16px;">🎯</span><div style="flex:1"><div style="font-size:11px;color:#E5E7EB;">Trabajo Profundo</div><div style="font-size:9px;color:#6B7280">2 horas</div></div><span class="ph-edit-icon">✏️</span></div>
+            </div>
+          </div>
+
+          <!-- Tab bar -->
+          <div class="phone-tabbar">
+            <div class="phone-tabbar-item active" id="tb-hoy" onclick="switchTab('hoy', null)"><span class="phone-tabbar-icon">☑️</span>HOY</div>
+            <div class="phone-tabbar-item" id="tb-dashboard" onclick="switchTab('dashboard', null)"><span class="phone-tabbar-icon">📊</span>DASH</div>
+            <div class="phone-tabbar-item" id="tb-analytics" onclick="switchTab('analytics', null)"><span class="phone-tabbar-icon">📈</span>STATS</div>
+            <div class="phone-tabbar-item" id="tb-comunidad" onclick="switchTab('comunidad', null)"><span class="phone-tabbar-icon">🔥</span>COM.</div>
+            <div class="phone-tabbar-item" id="tb-setup" onclick="switchTab('setup', null)"><span class="phone-tabbar-icon">⚙️</span>SETUP</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hook cards -->
+      <div class="tab-hooks" id="hookCards">
+        <div class="hook-card active-hook" id="hook-hoy">
+          <div class="hook-icon">☑️</div>
+          <div class="hook-body">
+            <div class="hook-title">Registro en 60 segundos</div>
+            <div class="hook-text">Toca cada hábito completado. La barra de progreso y el porcentaje se actualizan al instante. Sin fricción, sin excusas.</div>
+            <span class="hook-tag">Sync automático · Supabase</span>
+          </div>
+        </div>
+        <div class="hook-card" id="hook-dashboard">
+          <div class="hook-icon">📊</div>
+          <div class="hook-body">
+            <div class="hook-title">Tu semana de un vistazo</div>
+            <div class="hook-text">KPIs de hoy, semana y racha activa. El heatmap de 7 días te muestra exactamente qué días fueron fuertes y cuáles necesitas mejorar.</div>
+            <span class="hook-tag">Racha · Heatmap · KPIs</span>
+          </div>
+        </div>
+        <div class="hook-card" id="hook-analytics">
+          <div class="hook-icon">📈</div>
+          <div class="hook-body">
+            <div class="hook-title">3 anillos. Tu evolución completa.</div>
+            <div class="hook-text">Verde = hoy, Plata = semana, Dorado = mes. El ranking de hábitos te dice cuáles construiste de verdad y cuáles sigues evitando.</div>
+            <span class="hook-tag">Evolucion · 30 días</span>
+          </div>
+        </div>
+        <div class="hook-card" id="hook-comunidad">
+          <div class="hook-icon">🔥</div>
+          <div class="hook-body">
+            <div class="hook-title">La accountability que cambia todo</div>
+            <div class="hook-text">Publica tu logro del día con foto. Inspira en el leaderboard mensual. Cuando otros te ven, nadie falla. El 1% se construye en comunidad.</div>
+            <span class="hook-tag">Feed · Top 5 · Logros</span>
+          </div>
+        </div>
+        <div class="hook-card" id="hook-setup">
+          <div class="hook-icon">⚙️</div>
+          <div class="hook-body">
+            <div class="hook-title">Tu app, tus hábitos</div>
+            <div class="hook-text">Edita nombre, emoji y meta de cada hábito. Elimina los que no usas. Los cambios se reflejan en todos los tabs al instante.</div>
+            <span class="hook-tag">Personalizable · Real-time</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="section community" id="community">
+  <div class="section-inner">
+    <div class="s-tag rv">Comunidad del 1%</div>
+    <h2 class="s-h2 rv rv-d1">KAIZEN<br><em>LIFESTYLE</em></h2>
+    <div class="community-grid">
+      <div class="testimonials rv rv-d2">
+        <div class="testi-card">
+          <div class="testi-top">
+            <div class="testi-avatar">🧑‍💼</div>
+            <div>
+              <div class="testi-name">Carlos M.</div>
+              <div class="testi-handle">@carloskaizen · CDMX</div>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div class="testi-streak">21</div>
+              <div class="testi-streak-l">DÍAS RACHA</div>
+            </div>
+          </div>
+          <div class="testi-text">"Llevaba años intentando trackear hábitos con apps genéricas. Abrí Kaizen, configuré mis 10 hábitos en 5 minutos y en menos de 60 segundos ya había registrado mi primer día. Es la única app que siento que fue hecha para mí."</div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-top">
+            <div class="testi-avatar">👩‍🎨</div>
+            <div>
+              <div class="testi-name">Valeria R.</div>
+              <div class="testi-handle">@vale_1percent · MTY</div>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div class="testi-streak">14</div>
+              <div class="testi-streak-l">DÍAS RACHA</div>
+            </div>
+          </div>
+          <div class="testi-text">"Los anillos de Analytics me motivan más que cualquier app de pago. Ver el anillo dorado del mes crecer semana a semana es adictivo. Y el leaderboard con la comunidad me hace no querer bajar del top 5."</div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-top">
+            <div class="testi-avatar">🏃</div>
+            <div>
+              <div class="testi-name">Diego F.</div>
+              <div class="testi-handle">@diegofitkaizen · GDL</div>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div class="testi-streak">33</div>
+              <div class="testi-streak-l">DÍAS RACHA</div>
+            </div>
+          </div>
+          <div class="testi-text">"33 días de racha en ejercicio. Nunca había llegado tan lejos. Publicar mi logro diario en la comunidad con foto cambió todo — la accountability real es lo que diferencia a Kaizen de cualquier otra app."</div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="rv rv-d3">
+        <div class="community-manifesto">
+          <div class="cm-line"><span class="cm-kanji">改</span>El 1% mejor cada día no se siente grande.</div>
+          <div class="cm-line"><span class="cm-kanji">善</span>Pero en un año eres 37 veces mejor.</div>
+          <div class="cm-line"><span class="cm-kanji">継</span>La consistencia supera a la perfección.</div>
+          <div class="cm-line"><span class="cm-kanji">続</span>Un hábito que se registra es un hábito que vive.</div>
+        </div>
+        <div class="community-cta-box">
+          <span class="cta-kanji-big">改善</span>
+          <div class="cta-headline">Únete a la Comunidad</div>
+          <div class="cta-sub">
+            Personas en todo el mundo mejorando cada día.<br>
+            Compartiendo logros. Subiendo al leaderboard.<br>
+            #KaizenCommunity · #1PercentBetter
+          </div>
+          <a href="#get" class="btn-primary" style="display:inline-flex;justify-content:center;">
+            Quiero Kaizen PRO →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section pricing" id="pricing">
+  <div class="section-inner">
+    <div class="s-tag rv">Precios</div>
+    <h2 class="s-h2 rv rv-d1">SIMPLE.<br><em>JUSTO.</em></h2>
+    <p class="s-lead rv rv-d2">Pago único. Sin subscripciones.<br>Prueba 3 días gratis y cancela si no quieres formar parte del 1%.</p>
+
+    <div class="pricing-grid rv rv-d2">
+      <!-- PRO -->
+      <div class="price-card featured">
+        <div class="price-badge">MÁS POPULAR</div>
+        <div class="price-tier">Kaizen PRO</div>
+        <div class="price-amount"><span>$</span>29</div>
+        <div class="price-period">Pago único · Sin renovaciones</div>
+        <div class="price-trial">✦ 3 días gratis · Cancela cuando quieras</div>
+        <ul class="price-features">
+          <li>App iOS completa — 5 tabs</li>
+          <li>10 hábitos personalizables</li>
+          <li>Analytics con anillos progresivos</li>
+          <li>Dashboard con racha y heatmap semanal</li>
+          <li>Comunidad · Feed de logros con fotos</li>
+          <li>Leaderboard mensual del 1%</li>
+          <li>Notificaciones diarias inteligentes</li>
+          <li>Actualizaciones de por vida</li>
+          <li>Soporte directo vía WhatsApp</li>
+        </ul>
+        <a href="kaizen_pago.html" class="btn-price btn-price-gold">Comenzar 3 días gratis →</a>
+      </div>
+
+      <!-- TEAM -->
+      <div class="price-card disabled">
+        <div class="price-soon">PRÓXIMAMENTE</div>
+        <div class="price-tier">Kaizen TEAM / Empresa</div>
+        <div class="price-amount"><span>$</span>69</div>
+        <div class="price-period">Por equipo · Hasta 10 personas</div>
+        <div style="height:22px;"></div>
+        <ul class="price-features">
+          <li>Todo lo de Kaizen PRO</li>
+          <li>10 cuentas del equipo incluidas</li>
+          <li>Dashboard compartido del equipo</li>
+          <li>Leaderboard privado del equipo</li>
+          <li>Retos mensuales grupales</li>
+          <li>Onboarding en vivo por Zoom</li>
+          <li>Canal privado de equipo</li>
+          <li>Reporte semanal del equipo</li>
+          <li>Personalización con logo/marca</li>
+        </ul>
+        <div class="btn-price btn-price-ghost" style="text-align:center;padding:16px;border:1px solid #374151;color:#4B5563;">En desarrollo — Próximamente</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq" id="faq">
+  <div class="section-inner">
+    <div class="s-tag rv">Preguntas Frecuentes</div>
+    <h2 class="s-h2 rv rv-d1">TIENES<br><em>PREGUNTAS</em></h2>
+    <div class="faq-grid rv rv-d2">
+      <div class="faq-left-visual">
+        <div class="faq-kanji-stack">
+          <span class="faq-kanji-big">改</span>
+          <span class="faq-kanji-med">善</span>
+        </div>
+        <div class="faq-tagline">
+          <strong>改善</strong> — kaizen<br>
+          Resultados extraordinarios.<br>
+          Lo que mides, lo mejoras.<br><br>
+          <strong>"1% mejor cada día<br>= 37x mejor en un año."</strong>
+        </div>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q">¿En qué dispositivos funciona la app? <span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Kaizen Tracker es una app iOS nativa disponible para un solo iPhone por correo ingresado. Se instala vía TestFlight durante el piloto. No requiere ningún archivo externo ni Google Sheets — todo vive en la app y se sincroniza automáticamente con nuestra base de datos en la nube.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">¿Cómo funcionan los 3 días gratis? <span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Al registrarte tienes acceso completo a Kaizen PRO por 3 días sin cargo. Si en esos 3 días decides que no es para ti, cancelas y no se te cobra nada. Si decides quedarte, el pago único de $29 USD se aplica y el acceso es tuyo de por vida — sin renovaciones.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">¿Puedo personalizar mis hábitos? <span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Sí. En la pantalla Setup puedes cambiar el nombre, emoji y meta de cada uno de los 10 hábitos. También puedes eliminar los que no uses — desaparecen del registro diario, del dashboard y de los analytics. Los cambios se reflejan en toda la app al instante.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">¿Cómo funciona el leaderboard de comunidad? <span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><div class="faq-a-inner">El leaderboard se calcula en tiempo real basado en el total de hábitos completados en el mes actual. Todos los usuarios de Kaizen PRO aparecen en el ranking y se actualiza automáticamente cada vez que alguien registra su día. También puedes publicar fotos de tus logros en el feed comunitario.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">¿Qué pasa con mis datos? <span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Tus datos se guardan de forma segura en infraestructura de nivel empresarial. Solo tú tienes acceso a tu historial de hábitos. Los datos de comunidad (posts y leaderboard) son visibles para los miembros de la comunidad, pero tu progreso personal es 100% privado.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">¿El pago único incluye actualizaciones futuras? <span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Sí. El pago único de $29 USD incluye todas las actualizaciones futuras de la app. Cuando lancemos nuevas funciones, las recibirás automáticamente sin costo adicional. Sin renovaciones, sin sorpresas.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">¿Cuándo estará disponible en el App Store? <span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Actualmente estamos en fase piloto vía TestFlight. El lanzamiento oficial en el App Store está programado próximamente. Los usuarios del piloto tendrán acceso prioritario y su pago único aplica para la versión App Store sin ningún costo adicional.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="get">
+  <div class="final-cta-grid-lines"></div>
+  <div class="final-cta-glow"></div>
+  <div class="final-cta-inner section-inner">
+    <span class="final-cta-kanji rv">改善</span>
+    <h2 class="rv rv-d1">EMPIEZA<br>TU PRIMER<br><em>DÍA HOY</em></h2>
+    <p class="rv rv-d2">
+      El mejor momento para empezar fue hace un año.<br>
+      El segundo mejor momento es ahora.<br>
+      <strong style="color:var(--white)">Tu racha empieza con una decision.</strong>
+    </p>
+
+    <!-- SUBSCRIPTION SELECTOR -->
+    <div class="sub-selector rv rv-d3">
+      <div class="sub-tabs">
+        <button class="sub-tab active" id="subTabPro" onclick="switchSubTab('pro')">
+          <span class="sub-tab-price">$29</span>
+          <span class="sub-tab-label">KAIZEN PRO</span>
+        </button>
+        <button class="sub-tab" id="subTabTeam" disabled>
+          <span class="sub-tab-price">$69</span>
+          <span class="sub-tab-label">KAIZEN TEAM</span>
+          <span class="sub-tab-soon">Próximamente</span>
+        </button>
+      </div>
+
+      <!-- PRO Panel -->
+      <div class="sub-panel active" id="panel-pro">
+        <div class="sub-panel-content">
+          <div class="sub-panel-title">Kaizen PRO · Pago Único</div>
+          <div class="sub-panel-desc">Acceso completo de por vida. Sin renovaciones.</div>
+          <ul class="sub-panel-features">
+            <li>App completa con 5 tabs</li>
+            <li>Comunidad activa + leaderboard mensual</li>
+            <li>Analytics con anillos + ranking de hábitos</li>
+            <li>Notificaciones diarias inteligentes</li>
+            <li>Todas las actualizaciones futuras incluidas</li>
+          </ul>
+          <a href="kaizen_pago.html" class="sub-btn">Comenzar 3 días gratis → $29 USD pago único</a>
+        </div>
+        <div class="sub-trial-note">✦ 3 días gratis · Cancela si no eres parte del 1%</div>
+      </div>
+
+      <!-- TEAM Panel (disabled) -->
+      <div class="sub-panel" id="panel-team">
+        <div class="sub-panel-content" style="opacity:0.5;">
+          <div class="sub-panel-title">Kaizen TEAM · En Desarrollo</div>
+          <div class="sub-panel-desc">Esta modalidad estará disponible próximamente para equipos y empresas.</div>
+          <div style="font-size:var(--fs-sm);color:var(--slate);margin-top:8px;">Déjanos tu email y te avisamos cuando esté listo:</div>
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <input type="email" id="teamEmail" placeholder="tu@empresa.com" style="flex:1;background:var(--deep);border:1px solid var(--line);border-radius:var(--r);padding:12px;color:var(--white);font-family:'DM Mono';font-size:var(--fs-xs);">
+            <button onclick="saveTeamEmail()" style="background:var(--slate);color:var(--ink);padding:12px 20px;border-radius:var(--r);font-family:'DM Mono';font-size:var(--fs-xs);letter-spacing:0.1em;cursor:pointer;">AVISAR →</button>
+          </div>
+          <div id="teamEmailMsg" style="font-size:11px;color:var(--jade);margin-top:8px;display:none;">✓ Te avisamos cuando esté listo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="final-note rv rv-d3">Sin spam · Kaizen Tracker · 改善 · Comunidad del 1%</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <span class="nav-kanji">改善</span>
+          <span class="nav-wordmark">KAIZEN TRACKER</span>
+        </div>
+        <div class="footer-brand-desc">
+          La app de tracking de hábitos de la comunidad del 1%.
+          Construida por alguien con Kaizen tatuado en el cuello.
+          Porque la mejora continua no es un hobby — es una filosofía.
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>App</h4>
+        <ul>
+          <li><a href="#features">Funciones</a></li>
+          <li><a href="#preview">App Preview</a></li>
+          <li><a href="#how">Cómo funciona</a></li>
+          <li><a href="#pricing">Precios</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Comunidad</h4>
+        <ul>
+          <li><a href="#community">Testimonios</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#get">Comenzar</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kaizen</h4>
+        <ul>
+          <li><a href="#">改善 · Mejora continua</a></li>
+          <li><a href="#">1% mejor cada día</a></li>
+          <li><a href="#">#KaizenCommunity</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Kaizen Tracker · Comunidad del 1% · Todos los derechos reservados.</div>
+      <div class="footer-kanji">改善</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+(function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+
+/* NAV SCROLL */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 50); });
+
+/* REVEAL */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.rv').forEach(el => observer.observe(el));
+
+/* FAQ */
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* APP TAB SWITCHER */
+function switchTab(name, btnEl) {
+  // Update phone screens
+  document.querySelectorAll('.phone-tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+
+  // Update tab bar
+  document.querySelectorAll('.phone-tabbar-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('tb-' + name).classList.add('active');
+
+  // Update side nav buttons
+  document.querySelectorAll('.ptab-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  else {
+    document.querySelectorAll('.ptab-btn').forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + name + "'")) b.classList.add('active');
+    });
+  }
+
+  // Update hook cards
+  document.querySelectorAll('.hook-card').forEach(h => h.classList.remove('active-hook'));
+  const hook = document.getElementById('hook-' + name);
+  if (hook) hook.classList.add('active-hook');
+}
+
+/* SUBSCRIPTION TAB */
+function switchSubTab(tab) {
+  document.getElementById('subTabPro').classList.toggle('active', tab === 'pro');
+  document.getElementById('panel-pro').classList.toggle('active', tab === 'pro');
+  document.getElementById('panel-team').classList.toggle('active', tab === 'team');
+}
+
+/* TEAM EMAIL */
+function saveTeamEmail() {
+  const val = document.getElementById('teamEmail').value;
+  if (val && val.includes('@')) {
+    document.getElementById('teamEmailMsg').style.display = 'block';
+    document.getElementById('teamEmail').value = '';
+  }
+}
+
+/* MARQUEE CLONE */
+(function() {
+  const inner = document.getElementById('marqueeInner');
+  inner.innerHTML += inner.innerHTML;
+})();
+
+/* MOBILE MENU */
+const toggle = document.getElementById('menuToggle');
+toggle.addEventListener('click', () => {
+  const links = document.querySelector('.nav-links');
+  if (links) {
+    links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+    links.style.position = 'fixed';
+    links.style.flexDirection = 'column';
+    links.style.top = '60px';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.background = 'rgba(8,8,15,0.97)';
+    links.style.padding = '24px';
+    links.style.borderBottom = '1px solid #1F1F38';
+    links.style.gap = '24px';
+    links.style.zIndex = '99';
+  }
+});
+</script>
+</body>
+</html>
