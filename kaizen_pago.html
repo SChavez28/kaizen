@@ -7,122 +7,78 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Shippori+Mincho:wght@400;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ink:#08080F; --card:#111118; --border:#1E1E2E;
-  --gold:#C8A94A; --gold2:#E8C96E; --jade:#2DCEA0;
-  --slate:#6B7280; --gray2:#4B5563; --gray3:#374151; --gray4:#1F2937;
-  --white:#E5E7EB; --red:#EF4444;
-  --ease: cubic-bezier(0.16,1,0.3,1);
-}
+:root{--ink:#08080F;--card:#111118;--border:#1E1E2E;--gold:#C8A94A;--gold2:#E8C96E;--jade:#2DCEA0;--slate:#6B7280;--gray2:#4B5563;--white:#E5E7EB;--ease:cubic-bezier(0.16,1,0.3,1);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--ink);color:var(--white);font-family:'DM Mono',monospace;font-weight:300;line-height:1.6;min-height:100vh;}
+body{background:var(--ink);color:var(--white);font-family:"DM Mono",monospace;font-weight:300;line-height:1.6;min-height:100vh;}
 a{color:inherit;text-decoration:none;}
-
 .noise{position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:998;}
-
-/* TOPBAR */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 48px;border-bottom:1px solid var(--border);
-  background:rgba(8,8,15,0.95);backdrop-filter:blur(20px);
-  position:sticky;top:0;z-index:100;
-}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;border-bottom:1px solid var(--border);background:rgba(8,8,15,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;}
 .logo{display:flex;align-items:center;gap:10px;}
-.logo-kanji{font-family:'Shippori Mincho',serif;font-size:22px;color:var(--gold);}
+.logo-kanji{font-family:"Shippori Mincho",serif;font-size:22px;color:var(--gold);}
 .logo-word{font-size:11px;letter-spacing:0.2em;color:var(--slate);text-transform:uppercase;}
 .topbar-badge{font-size:11px;color:var(--jade);letter-spacing:0.1em;border:1px solid rgba(45,206,160,0.3);padding:6px 14px;border-radius:3px;}
 .back-link{font-size:11px;color:var(--slate);letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;}
 .back-link:hover{color:var(--white);}
-
-/* LAYOUT */
 .page{max-width:900px;margin:0 auto;padding:60px 24px 80px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
 @media(max-width:700px){.page{grid-template-columns:1fr;gap:32px;padding:40px 20px 60px;}}
-
-/* LEFT — ORDER SUMMARY */
-.summary{}
 .sum-tag{font-size:11px;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:20px;padding:5px 12px;border:1px solid rgba(200,169,74,0.3);border-radius:3px;display:inline-block;}
 .sum-product{background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:28px;margin-bottom:20px;}
 .sum-product-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.sum-name{font-family:'Bebas Neue';font-size:32px;color:var(--gold);letter-spacing:0.05em;}
-.sum-price-tag{text-align:right;}
-.sum-price{font-family:'Bebas Neue';font-size:48px;color:var(--white);line-height:1;}
+.sum-name{font-family:"Bebas Neue";font-size:32px;color:var(--gold);letter-spacing:0.05em;}
+.sum-price{font-family:"Bebas Neue";font-size:48px;color:var(--white);line-height:1;}
 .sum-price-sub{font-size:11px;color:var(--slate);letter-spacing:0.1em;}
 .sum-features{list-style:none;display:flex;flex-direction:column;gap:10px;}
 .sum-features li{font-size:13px;color:#9CA3AF;display:flex;gap:10px;align-items:flex-start;}
-.sum-features li::before{content:'✓';color:var(--jade);flex-shrink:0;}
+.sum-features li::before{content:"✓";color:var(--jade);flex-shrink:0;}
 .trial-banner{background:rgba(45,206,160,0.08);border:1px solid rgba(45,206,160,0.25);border-radius:8px;padding:14px 18px;display:flex;gap:10px;align-items:center;margin-bottom:20px;}
 .trial-icon{font-size:20px;}
 .trial-text{font-size:13px;color:var(--jade);line-height:1.6;}
 .trial-text strong{display:block;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;}
 .guarantee{font-size:11px;color:var(--slate);text-align:center;margin-top:16px;line-height:1.7;}
-
-/* RIGHT — PAYMENT FORM */
 .payment-form{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;}
 .form-title{font-size:13px;color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);}
 .field-group{margin-bottom:20px;}
 .field-label{font-size:10px;color:var(--slate);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px;display:block;}
-.field-input{
-  width:100%;background:var(--ink);border:1px solid var(--border);
-  border-radius:8px;padding:14px 16px;
-  color:var(--white);font-family:'DM Mono';font-size:14px;
-  transition:border-color 0.2s;outline:none;
-}
+.field-input{width:100%;background:var(--ink);border:1px solid var(--border);border-radius:8px;padding:14px 16px;color:var(--white);font-family:"DM Mono";font-size:14px;transition:border-color 0.2s;outline:none;}
 .field-input:focus{border-color:var(--gold);}
 .field-input::placeholder{color:var(--gray2);}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .payment-methods{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
-.pm-btn{
-  flex:1;min-width:80px;padding:10px 8px;border-radius:6px;
-  background:var(--ink);border:1px solid var(--border);
-  font-family:'DM Mono';font-size:10px;color:var(--slate);
-  letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;
-  transition:all 0.2s;text-align:center;
-}
+.pm-btn{flex:1;min-width:80px;padding:10px 8px;border-radius:6px;background:var(--ink);border:1px solid var(--border);font-family:"DM Mono";font-size:10px;color:var(--slate);letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-align:center;}
 .pm-btn:hover,.pm-btn.active{border-color:var(--gold);color:var(--gold);}
 .pm-icon{display:block;font-size:20px;margin-bottom:4px;}
-
-/* Bank transfer details */
 .bank-details{background:var(--ink);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:20px;}
 .bank-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
 .bank-row:last-child{border-bottom:none;}
 .bank-key{font-size:11px;color:var(--slate);letter-spacing:0.1em;text-transform:uppercase;}
 .bank-val{font-size:13px;color:var(--white);font-weight:500;display:flex;align-items:center;gap:8px;}
-.copy-btn{background:none;border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-family:'DM Mono';font-size:10px;color:var(--slate);cursor:pointer;transition:all 0.2s;}
+.copy-btn{background:none;border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-family:"DM Mono";font-size:10px;color:var(--slate);cursor:pointer;transition:all 0.2s;}
 .copy-btn:hover{border-color:var(--gold);color:var(--gold);}
-
-.submit-btn{
-  width:100%;padding:18px;
-  background:var(--gold);color:var(--ink);
-  font-family:'DM Mono';font-size:12px;
-  letter-spacing:0.2em;text-transform:uppercase;font-weight:500;
-  border-radius:8px;cursor:pointer;
-  transition:background 0.2s,transform 0.2s;
-  border:none;margin-top:8px;
-}
+.submit-btn{width:100%;padding:18px;background:var(--gold);color:var(--ink);font-family:"DM Mono";font-size:12px;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;border-radius:8px;cursor:pointer;transition:background 0.2s,transform 0.2s;border:none;margin-top:8px;}
 .submit-btn:hover{background:var(--gold2);transform:translateY(-1px);}
 .secure-note{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;font-size:11px;color:var(--slate);}
-
-/* Panel visibility */
 .payment-panel{display:none;}
 .payment-panel.active{display:block;}
-
-/* Confirmation step */
-.confirm-box{text-align:center;padding:20px 0;}
-.confirm-icon{font-size:48px;margin-bottom:16px;}
-.confirm-title{font-family:'Bebas Neue';font-size:36px;color:var(--jade);letter-spacing:0.05em;margin-bottom:12px;}
-.confirm-text{font-size:13px;color:var(--slate);line-height:1.8;margin-bottom:24px;}
-.confirm-steps{background:var(--ink);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:left;}
-.confirm-step-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
-.confirm-step-row:last-child{border-bottom:none;}
-.conf-num{font-family:'Bebas Neue';font-size:20px;color:var(--gold);width:24px;flex-shrink:0;}
-.conf-text{font-size:12px;color:#9CA3AF;line-height:1.6;}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);z-index:9999;display:none;align-items:center;justify-content:center;padding:24px;}
+.modal-overlay.active{display:flex;}
+.modal-box{background:#111118;border:1px solid var(--gold);border-radius:20px;padding:48px 40px;max-width:480px;width:100%;text-align:center;animation:popIn 0.4s var(--ease);}
+@keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+.modal-icon{font-size:56px;margin-bottom:16px;}
+.modal-title{font-family:"Bebas Neue";font-size:40px;color:var(--jade);letter-spacing:0.05em;margin-bottom:12px;}
+.modal-text{font-size:13px;color:var(--slate);line-height:1.8;margin-bottom:24px;}
+.modal-steps{text-align:left;background:var(--ink);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:28px;}
+.modal-step{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);}
+.modal-step:last-child{border-bottom:none;}
+.modal-step-num{font-family:"Bebas Neue";font-size:18px;color:var(--gold);width:22px;flex-shrink:0;}
+.modal-step-text{font-size:12px;color:#9CA3AF;line-height:1.6;}
+.modal-btn{display:block;width:100%;padding:16px;background:var(--gold);color:var(--ink);font-family:"DM Mono";font-size:12px;letter-spacing:0.2em;text-transform:uppercase;border:none;border-radius:8px;cursor:pointer;transition:background 0.2s;}
+.modal-btn:hover{background:var(--gold2);}
 </style>
 </head>
 <body>
 <div class="noise"></div>
 
-<!-- TOPBAR -->
 <div class="topbar">
   <a href="kaizen_landing_v2.html" class="back-link">← Regresar</a>
   <div class="logo">
@@ -132,17 +88,13 @@ a{color:inherit;text-decoration:none;}
   <div class="topbar-badge">✦ 3 días gratis</div>
 </div>
 
-<!-- PAGE -->
 <div class="page">
-
-  <!-- LEFT: SUMMARY -->
-  <div class="summary">
+  <div>
     <div class="sum-tag">Resumen del pedido</div>
-
     <div class="sum-product">
       <div class="sum-product-top">
         <div class="sum-name">KAIZEN PRO</div>
-        <div class="sum-price-tag">
+        <div>
           <div class="sum-price">$29</div>
           <div class="sum-price-sub">USD · Pago único</div>
         </div>
@@ -159,143 +111,123 @@ a{color:inherit;text-decoration:none;}
         <li>Soporte directo vía WhatsApp</li>
       </ul>
     </div>
-
     <div class="trial-banner">
       <div class="trial-icon">🎁</div>
       <div class="trial-text">
         <strong>3 días gratis incluidos</strong>
-        Prueba Kaizen PRO sin riesgo. Si en los primeros 3 días decides que no formas parte del 1%, cancelas y no se completa el cobro.
+        Prueba Kaizen PRO sin riesgo. Si en los primeros 3 días decides que no es para ti, cancelas y no se te cobra nada.
       </div>
     </div>
-
-    <div class="guarantee">
-      🔒 Pago seguro · Sin subscripciones · Sin renovaciones automáticas<br>
-      $29 USD una sola vez = acceso de por vida
-    </div>
+    <div class="guarantee">🔒 Pago seguro · Sin suscripciones · Sin renovaciones<br>$29 USD una sola vez = acceso de por vida</div>
   </div>
 
-  <!-- RIGHT: PAYMENT -->
-  <div class="payment-form" id="paymentForm">
+  <div class="payment-form">
     <div class="form-title">Método de pago</div>
-
-    <!-- Payment method buttons -->
     <div class="payment-methods">
       <button class="pm-btn active" onclick="selectMethod('transfer')" id="btn-transfer">
         <span class="pm-icon">🏦</span>Transferencia
       </button>
+
     </div>
 
-    <!-- TRANSFER PANEL -->
     <div class="payment-panel active" id="panel-transfer">
       <div class="field-group">
         <label class="field-label">Tu nombre completo</label>
-        <input class="field-input" type="text" placeholder="Ej: Carlos Martínez" id="transferName">
+        <input class="field-input" type="text" id="transferName" placeholder="Ej: Carlos Martínez">
       </div>
       <div class="field-group">
-        <label class="field-label">Tu email (SE ENVIA ACCESO)</label>
-        <input class="field-input" type="email" placeholder="tu@email.com" id="transferEmail">
+        <label class="field-label">Tu email (Envio de acceso)</label>
+        <input class="field-input" type="email" id="transferEmail" placeholder="tu@email.com">
       </div>
-
       <div class="field-group">
-        <label class="field-label">Datos bancarios para transferencia</label>
+        <label class="field-label">Datos bancarios</label>
         <div class="bank-details">
-          <div class="bank-row">
-            <span class="bank-key">Banco</span>
-            <span class="bank-val">MERCADO PAGO W <button class="copy-btn" onclick="copyText('MERCADO PAGO W')">COPIAR</button></span>
-          </div>
-          <div class="bank-row">
-            <span class="bank-key">Titular</span>
-            <span class="bank-val">Saul Chavez <button class="copy-btn" onclick="copyText('Saul Chavez')">COPIAR</button></span>
-          </div>
-          <div class="bank-row">
-            <span class="bank-key">CLABE</span>
-            <span class="bank-val">722 969 020 212 986 845 <button class="copy-btn" onclick="copyText('012345678901234 56')">COPIAR</button></span>
-          </div>
-          <div class="bank-row">
-            <span class="bank-key">Concepto</span>
-            <span class="bank-val">KAIZEN + tu email <button class="copy-btn" onclick="copyText('KAIZEN')">COPIAR</button></span>
-          </div>
-          <div class="bank-row">
-            <span class="bank-key">WhatsApp</span>
-            <span class="bank-val">669 229 10 82 <button class="copy-btn" onclick="copyText('KAIZEN')">COPIAR</button></span>
-          </div>
-          <div class="bank-row">
-            <span class="bank-key">Monto</span>
-            <span class="bank-val" style="color:var(--gold)">$29 USD (o equivalente en MXN)</span>
-          </div>
+          <div class="bank-row"><span class="bank-key">Banco</span><span class="bank-val">Mercado Pago W <button class="copy-btn" onclick="copyText('BBVA México')">COPIAR</button></span></div>
+          <div class="bank-row"><span class="bank-key">Titular</span><span class="bank-val">Saul Chavez <button class="copy-btn" onclick="copyText('Saul Chavez')">COPIAR</button></span></div>
+          <div class="bank-row"><span class="bank-key">CLABE</span><span class="bank-val">7229 6902 0212 9868 45 <button class="copy-btn" onclick="copyText('722969020212986845')">COPIAR</button></span></div>
+          <div class="bank-row"><span class="bank-key">Concepto</span><span class="bank-val">KAIZEN + tu email</div>
+            <div class="bank-row"><span class="bank-key">WhatsApp</span><span class="bank-val">669 229 1082 <button class="copy-btn" onclick="copyText('669 229 1082')">COPIAR</button></span></div>
+            <div class="bank-row"><span class="bank-key">Monto</span><span class="bank-val" style="color:var(--gold)">$29 USD equivalente MXN</span></div>
         </div>
       </div>
-      <p style="font-size:11px;color:var(--slate);margin-bottom:16px;line-height:1.7;">
-        ⚠️ Después de hacer tu transferencia, envía tu comprobante por WhatsApp para activar tu cuenta dentro de 24hrs.
-      </p>
-      <button class="submit-btn" onclick="confirmTransfer()">YA REALICÉ MI TRANSFERENCIA →</button>
+      <p style="font-size:11px;color:var(--slate);margin-bottom:16px;line-height:1.7;">⚠️ Envía tu comprobante por WhatsApp para activar tu cuenta en 24hrs.</p>
+      <button class="submit-btn" id="btnTransfer" onclick="confirmTransfer()">YA REALICÉ MI TRANSFERENCIA →</button>
     </div>
 
-  <!-- CONFIRMATION (hidden) -->
-  <div id="confirmationBox" style="display:none;grid-column:1/-1;">
-    <div class="payment-form confirm-box">
-      <div class="confirm-icon">🎉</div>
-      <div class="confirm-title">¡PAGO RECIBIDO!</div>
-      <div class="confirm-text">
-        Gracias por unirte a la comunidad Kaizen PRO.<br>
-        Tu acceso será activado en menos de <strong style="color:var(--white)">24 horas</strong>.<br>
-        Recibirás un email con el enlace de TestFlight para instalar la app.
-      </div>
-      <div class="confirm-steps">
-        <div class="confirm-step-row">
-          <div class="conf-num">01</div>
-          <div class="conf-text"><strong style="color:var(--white)">Revisa tu email</strong> — Te enviaremos el enlace de TestFlight para instalar Kaizen en tu iPhone en menos de 24hrs.</div>
-        </div>
-        <div class="confirm-step-row">
-          <div class="conf-num">02</div>
-          <div class="conf-text"><strong style="color:var(--white)">Instala TestFlight</strong> — Si no lo tienes, descárgalo gratis desde el App Store. Es la plataforma de Apple para apps en desarrollo.</div>
-        </div>
-        <div class="confirm-step-row">
-          <div class="conf-num">03</div>
-          <div class="conf-text"><strong style="color:var(--white)">Abre Kaizen</strong> — Crea tu cuenta, configura tus hábitos en Setup y empieza tu primera racha hoy.</div>
-        </div>
-        <div class="confirm-step-row">
-          <div class="conf-num">04</div>
-          <div class="conf-text"><strong style="color:var(--white)">Únete a la comunidad</strong> — Publica tu primer logro en COMUNIDAD y sube al leaderboard del 1%.</div>
-        </div>
-      </div>
-      <div style="margin-top:24px;font-size:12px;color:var(--slate);">
-        ¿Dudas? Escríbenos por WhatsApp · 改善 · #1PercentBetter
-      </div>
-    </div>
+    
+
+    
+
+    <div class="secure-note">🔒 Pago manual verificado · Activación en menos de 24hrs</div>
   </div>
+</div>
 
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-icon">🎉</div>
+    <div class="modal-title">¡ENVÍO EXITOSO!</div>
+    <div class="modal-text">Recibimos tu confirmación.<br>Tu acceso será activado en menos de <strong style="color:var(--white)">24 horas</strong>.</div>
+    <div class="modal-steps">
+      <div class="modal-step"><div class="modal-step-num">01</div><div class="modal-step-text"><strong style="color:var(--white)">Revisa tu email</strong> — Te enviamos el enlace de TestFlight para instalar Kaizen en tu iPhone.</div></div>
+      <div class="modal-step"><div class="modal-step-num">02</div><div class="modal-step-text"><strong style="color:var(--white)">Instala TestFlight</strong> — Descárgalo gratis del App Store si no lo tienes.</div></div>
+      <div class="modal-step"><div class="modal-step-num">03</div><div class="modal-step-text"><strong style="color:var(--white)">Empieza tu racha</strong> — Configura tus hábitos y publica tu primer logro. 改善</div></div>
+    </div>
+    <button class="modal-btn" onclick="closeModal()">ENTENDIDO · REVISO MI EMAIL →</button>
+  </div>
 </div>
 
 <script>
 function selectMethod(method) {
-  document.querySelectorAll('.pm-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.payment-panel').forEach(p => p.classList.remove('active'));
-  const btn = document.getElementById('btn-'+method);
-  const panel = document.getElementById('panel-'+method);
-  if (btn) btn.classList.add('active');
-  if (panel) panel.classList.add('active');
+  document.querySelectorAll(".pm-btn").forEach(function(b){ b.classList.remove("active"); });
+  document.querySelectorAll(".payment-panel").forEach(function(p){ p.classList.remove("active"); });
+  var btn   = document.getElementById("btn-"   + method);
+  var panel = document.getElementById("panel-" + method);
+  if (btn)   btn.classList.add("active");
+  if (panel) panel.classList.add("active");
 }
 
 function copyText(txt) {
-  navigator.clipboard.writeText(txt).then(() => {
-    const btns = document.querySelectorAll('.copy-btn');
-    btns.forEach(b => { if(b.getAttribute('onclick') && b.getAttribute('onclick').includes(txt.substring(0,5))) { b.textContent='✓'; setTimeout(()=>{b.textContent='COPIAR'},1500); }});
+  navigator.clipboard.writeText(txt).then(function() {
+    document.querySelectorAll(".copy-btn").forEach(function(b) {
+      if (b.getAttribute("onclick") && b.getAttribute("onclick").indexOf(txt.substring(0,4)) > -1) {
+        b.textContent = "✓";
+        setTimeout(function(){ b.textContent = "COPIAR"; }, 1500);
+      }
+    });
   });
 }
 
-function showConfirmation() {
-  document.getElementById('paymentForm').style.display = 'none';
-  document.getElementById('confirmationBox').style.display = 'block';
-  window.scrollTo({top:0,behavior:'smooth'});
+function showModal() {
+  document.getElementById("modalOverlay").classList.add("active");
+}
+
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("active");
+}
+
+var W3F_KEY = "09fd2cea-7d9f-4088-b7c3-51873f410912";
+
+function enviarCorreo(datos) {
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify(Object.assign({ access_key: W3F_KEY }, datos))
+  }).catch(function(e){ console.log("error:", e); });
 }
 
 function confirmTransfer() {
-  const name  = document.getElementById('transferName').value.trim();
-  const email = document.getElementById('transferEmail').value.trim();
-  if (!name) return alert('Por favor ingresa tu nombre.');
-  if (!email || !email.includes('@')) return alert('Por favor ingresa un email válido.');
-  showConfirmation();
+  var name  = document.getElementById("transferName").value.trim();
+  var email = document.getElementById("transferEmail").value.trim();
+  if (!name)                          { alert("Por favor ingresa tu nombre.");        return; }
+  if (!email || email.indexOf("@")<0) { alert("Por favor ingresa un email válido.");  return; }
+  enviarCorreo({
+    subject: "Nuevo pago KAIZEN PRO — Transferencia",
+    name:    name,
+    email:   email,
+    mensaje: name + " (" + email + ") — Transferencia bancaria — $29 USD"
+  });
+  showModal();
 }
 
 </script>
