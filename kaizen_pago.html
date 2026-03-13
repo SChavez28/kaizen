@@ -298,7 +298,7 @@ function closeCancelOk() {
 function enviarCancelacion() {
   var WhatsApp  = document.getElementById("cancelWhatsApp").value.trim();
   var razon  = document.getElementById("cancelRazon").value.trim();
-  if (!WhatsApp || WhatsApp.indexOf("@") < 0) { alert("Por favor ingresa numero celular."); return; }
+  if (!WhatsApp || WhatsApp.lenght < 10) { alert("Por favor ingresa numero celular."); return; }
   enviarCorreo({
     subject: "⚠️ Solicitud de cancelación KAIZEN PRO",
     Numero:    WhatsApp,
