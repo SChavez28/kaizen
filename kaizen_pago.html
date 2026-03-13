@@ -60,14 +60,14 @@ a{color:inherit;text-decoration:none;}
 .payment-panel{display:none;}
 .payment-panel.active{display:block;}
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);z-index:9999;display:none;align-items:center;justify-content:center;padding:24px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto;}
 .modal-overlay.active{display:flex;}
-.modal-box{background:#111118;border:1px solid var(--gold);border-radius:20px;padding:48px 40px;max-width:480px;width:100%;text-align:center;animation:popIn 0.4s var(--ease);}
+.modal-box{background:#111118;border:1px solid var(--gold);border-radius:16px;padding:28px 24px;max-width:400px;width:100%;text-align:center;animation:popIn 0.4s var(--ease);max-height:88vh;overflow-y:auto;margin:auto;}
 @keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
-.modal-icon{font-size:56px;margin-bottom:16px;}
-.modal-title{font-family:"Bebas Neue";font-size:40px;color:var(--jade);letter-spacing:0.05em;margin-bottom:12px;}
-.modal-text{font-size:13px;color:var(--slate);line-height:1.8;margin-bottom:24px;}
-.modal-steps{text-align:left;background:var(--ink);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:28px;}
+.modal-icon{font-size:40px;margin-bottom:10px;}
+.modal-title{font-family:"Bebas Neue";font-size:32px;color:var(--jade);letter-spacing:0.05em;margin-bottom:8px;}
+.modal-text{font-size:12px;color:var(--slate);line-height:1.7;margin-bottom:16px;}
+.modal-steps{text-align:left;background:var(--ink);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px;}
 .modal-step{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);}
 .modal-step:last-child{border-bottom:none;}
 .modal-step-num{font-family:"Bebas Neue";font-size:18px;color:var(--gold);width:22px;flex-shrink:0;}
@@ -145,12 +145,12 @@ a{color:inherit;text-decoration:none;}
           <div class="bank-row"><span class="bank-key">Banco</span><span class="bank-val">Mercado Pago W <button class="copy-btn" data-copy="Mercado Pago W" onclick="copiar(this)">COPIAR</button></span></div>
           <div class="bank-row"><span class="bank-key">Titular</span><span class="bank-val">Saul Chavez <button class="copy-btn" data-copy="Saul Chavez" onclick="copiar(this)">COPIAR</button></span></div>
           <div class="bank-row"><span class="bank-key">CLABE</span><span class="bank-val">7229 6902 0212 9868 45 <button class="copy-btn" data-copy="722969020212986845" onclick="copiar(this)">COPIAR</button></span></div>
-          <div class="bank-row"><span class="bank-key">Concepto</span><span class="bank-val">KAIZEN+Nombre/Apellidos <button class="copy-btn" data-copy="KAIZEN +" onclick="copiar(this)">COPIAR</button></span></div>
+          <div class="bank-row"><span class="bank-key">Concepto</span><span class="bank-val">KAIZEN + Nombre comp. <button class="copy-btn" data-copy="KAIZEN +" onclick="copiar(this)">COPIAR</button></span></div>
           <div class="bank-row"><span class="bank-key">WhatsApp</span><span class="bank-val">669 229 1082 <button class="copy-btn" data-copy="6692291082" onclick="copiar(this)">COPIAR</button></span></div>
-          <div class="bank-row"><span class="bank-key">Monto</span><span class="bank-val" style="color:var(--gold)">$29USD/Equivalente a tu moneda</span></div>
+          <div class="bank-row"><span class="bank-key">Monto</span><span class="bank-val" style="color:var(--gold)">$29USD/Equivalente moneda</span></div>
         </div>
       </div>
-      <p style="font-size:11px;color:var(--slate);margin-bottom:16px;line-height:1.7;">⚠️ Envía tu comprobante por WhatsApp para activar tu cuenta dentro de 24hrs.</p>
+      <p style="font-size:11px;color:var(--slate);margin-bottom:16px;line-height:1.7;">⚠️ Envía tu comprobante por WhatsApp para activar tu cuenta en 24hrs.</p>
       <button class="submit-btn" id="btnTransfer" onclick="confirmTransfer()">YA REALICÉ MI TRANSFERENCIA →</button>
     </div>
 
@@ -173,7 +173,7 @@ a{color:inherit;text-decoration:none;}
 <div class="modal-overlay" id="modalCancelacion">
   <div class="modal-box">
     <div class="modal-icon">⏸️</div>
-    <div class="modal-title" style="color:#EF4444;">¿SEGURO QUE QUIERES ABANDONAR?</div>
+    <div class="modal-title" style="color:#EF4444;">¿SEGURO QUE QUIERES SALIR?</div>
     <div class="modal-text">
       Antes de cancelar, queremos entender qué pasó.<br>
       <strong style="color:var(--white)">Un mensaje tuyo nos ayuda a mejorar</strong> — y en muchos casos podemos resolverlo.
